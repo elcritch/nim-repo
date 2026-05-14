@@ -24,10 +24,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-atlas-
 
-      - run: echo "$HOME/.nimble/bin" >> "$GITHUB_PATH"
-      - run: cd /tmp && nimble install "https://github.com/nim-lang/atlas@#head"
-      - run: atlas -v
-      - run: atlas init
-      - run: atlas install
-      - run: nim test
+      - name: Add Atlas to PATH
+        run: echo "$HOME/.nimble/bin" >> "$GITHUB_PATH"
 
+      - name: Install Atlas
+        shell: bash
+        run: curl -fsSL https://raw.githubusercontent.com/nim-lang/atlas/HEAD/install.sh | bash -
+
+      - name: Check Atlas version
+        run: atlas -v
+
+      - name: Install dependencies
+        run: atlas install
+
+      - name: Run tests
+        run: nim test
